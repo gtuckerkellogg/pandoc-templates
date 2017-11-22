@@ -1,6 +1,6 @@
 \documentclass[11pt,article,oneside]{memoir}
-%\usepackage[minion]{org-preamble-pdflatex}
-%\input{vc}
+\usepackage{org-preamble-pdflatex}
+\usepackage{gitinfo2}
 
 $if(listings)$
 \usepackage{listings}
@@ -57,7 +57,7 @@ $endfor$
 %\setsansfont[Mapping=tex-text]{Minion Pro} 
 %\setmonofont[Mapping=tex-text,Scale=0.8]{Pragmata}
 \chapterstyle{article-4} 
-\pagestyle{kjh}
+\pagestyle{giruled}
 
 \published{$date$.}
 
