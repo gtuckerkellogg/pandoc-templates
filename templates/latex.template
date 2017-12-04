@@ -2,6 +2,10 @@
 \usepackage{org-preamble-pdflatex}
 \usepackage{gitinfo2}
 
+$if(draft)$
+\OnehalfSpacing
+$endif$
+
 $if(listings)$
 \usepackage{listings}
 \lstset{
