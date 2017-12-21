@@ -1,5 +1,10 @@
+$if(a4)$
+\documentclass[11pt,a4paper,article,oneside]{memoir}
+$else$
 \documentclass[11pt,article,oneside]{memoir}
-\usepackage{org-preamble-pdflatex}
+$endif$
+
+\usepackage[minion]{org-preamble-pdflatex}
 \usepackage{gitinfo2}
 
 $if(draft)$
@@ -12,6 +17,7 @@ $if(listings)$
         basicstyle=\small\ttfamily,
         frame=single,
         float}
+
 $endif$
 $if(lhs)$
 \lstnewenvironment{code}{\lstset{language=r,basicstyle=\small\ttfamily}}{}
@@ -60,7 +66,7 @@ $endfor$
 %\setromanfont[Mapping=tex-text,Numbers=OldStyle]{Minion Pro} 
 %\setsansfont[Mapping=tex-text]{Minion Pro} 
 %\setmonofont[Mapping=tex-text,Scale=0.8]{Pragmata}
-\chapterstyle{article-4} 
+\chapterstyle{article-gtk} 
 \pagestyle{giruled}
 
 \published{$date$.}
