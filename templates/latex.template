@@ -4,7 +4,12 @@ $else$
 \documentclass[11pt,article,oneside]{memoir}
 $endif$
 
+$if(minion)$
 \usepackage[minion]{org-preamble-pdflatex}
+$else$
+\usepackage[]{org-preamble-pdflatex}
+$endif$
+
 \usepackage{gitinfo2}
 
 $if(draft)$
