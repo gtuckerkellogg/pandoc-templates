@@ -9,7 +9,7 @@ $if(minion)$
 $else$
 \usepackage[]{org-preamble-pdflatex}
 $endif$
-
+        
 \usepackage{gitinfo2}
 
 $if(draft)$
