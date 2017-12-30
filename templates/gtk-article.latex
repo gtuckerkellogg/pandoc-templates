@@ -1,14 +1,12 @@
-$if(a4)$
-\documentclass[11pt,a4paper,article,oneside]{memoir}
-$else$
-\documentclass[11pt,article,oneside]{memoir}
+\PassOptionsToPackage{unicode=true}{hyperref} % options for packages loaded elsewhere
+\PassOptionsToPackage{hyphens}{url}
+$if(colorlinks)$
+\PassOptionsToPackage{dvipsnames,svgnames*,x11names*}{xcolor}
 $endif$
+%
+\documentclass[$if(fontsize)$$fontsize$,$endif$$if(lang)$$babel-lang$,$endif$$if(papersize)$$papersize$paper,$endif$$if(beamer)$ignorenonframetext,$endif$$if(draft)$draft,$endif$$if(handout)$handout,$endif$$if(aspectratio)$aspectratio=$aspectratio$,$endif$$for(classoption)$$classoption$$sep$,$endfor$,article]{memoir}
 
-$if(minion)$
-\usepackage[minion]{org-preamble-pdflatex}
-$else$
-\usepackage[]{org-preamble-pdflatex}
-$endif$
+\usepackage[$if(minion)$minion$endif$]{org-preamble-pdflatex}
         
 \usepackage{gitinfo2}
 
@@ -22,8 +20,8 @@ $if(listings)$
         basicstyle=\small\ttfamily,
         frame=single,
         float}
-
 $endif$
+
 $if(lhs)$
 \lstnewenvironment{code}{\lstset{language=r,basicstyle=\small\ttfamily}}{}
 $endif$
@@ -33,6 +31,7 @@ $endif$
 $if(verbatim-in-note)$
 \usepackage{fancyvrb}
 $endif$
+
 $if(tables)$
 \usepackage{longtable}
 $endif$
@@ -50,38 +49,50 @@ $if(graphics)$
 \renewcommand{\includegraphics}[1]{\Oldincludegraphics[width=\maxwidth]{#1}}
 $endif$
 
+
+
 $if(title)$
 \title{\bigskip \bigskip $title$$if(thanks)$\thanks{$thanks$} $endif$ }
 $endif$ 
 
 \author{
-  $for(author)$
-    \Large $author.name$
-    \vspace{0.05in}
+\linespread{1}
+ \parskip 0.2em plus 1pt minus 1pt
+ $for(author)$
+  \vspace{0.5em}
+  \noindent  \Large $author.name$
     $for(author.affiliation)$
-      \newline\normalsize\emph{$author.affiliation$}
+    
+     \hangindent=0.5em \normalsize\emph{$author.affiliation$}
     $endfor$
     $if(author.email)$
-      \newline\footnotesize \url{$author.email$}
+    
+        \noindent\footnotesize{
+      \url{$author.email$}
+      $if(author.corresponding)$
+        (address for correspondence)
+      $endif$}
     $endif$
-    \vspace*{0.2in}
-    \newline $sep$ \and
+    
   $endfor$
+  
 }
 
 \date{}
 
-$for(header-includes)$
-$header-includes$
+$for(latex-header-includes)$
+$latex-header-includes$
 $endfor$
 
 \begin{document}  
 \setkeys{Gin}{width=1\textwidth} 	
-%\setromanfont[Mapping=tex-text,Numbers=OldStyle]{Minion Pro} 
-%\setsansfont[Mapping=tex-text]{Minion Pro} 
-%\setmonofont[Mapping=tex-text,Scale=0.8]{Pragmata}
-\chapterstyle{article-gtk} 
-\pagestyle{giruled}
+
+
+\chapterstyle{$if(chapterstyle)$$chapterstyle$$else$article-gtk$endif$}
+
+\pagestyle{$if(pagestyle)$$pagestyle$$else$giruled$endif$}
+
+
 
 \published{$date$.}
 
@@ -91,20 +102,17 @@ $endif$
 
 $if(toc)$
 {
-\hypersetup{linkcolor=black}
-\setcounter{tocdepth}{$toc-depth$}
-\tableofcontents
+  \clearpage
+   \hypersetup{linkcolor=black}
+   \setcounter{tocdepth}{$toc-depth$}
+   \tableofcontents*
 }
 $endif$
 
 $if(abstract)$
-
-\begin{abstract}
-
-\vspace*{-0.75in}\noindent \emph{Abstract:} $abstract$
-
-\end{abstract}
-
+\clearpage
+ \begin{abstract}$abstract$\end{abstract}
+\clearpage
 $endif$
 
 $body$

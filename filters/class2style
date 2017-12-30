@@ -1,0 +1,18 @@
+-- -*-Lua-*-
+
+-- replace classs marked with [text to surround]{.command.} with \command{text to
+-- surround} when the output is latex
+-- otherwise, remove the trailing . and do nothing.
+
+function Span (elem) 
+   -- match if the class of the element ends in "." 
+   if FORMAT == "latex" and elem.classes[1] and 
+   elem.classes[1]:match("%.$") then 
+      -- get rid of the trailing "." 
+      local latex_cmd = elem.classes[1]:sub(1,-2) 
+      local opener = { pandoc.RawInline("latex", "\\" .. latex_cmd .. "{") } 
+      local closer = { pandoc.RawInline("latex", "}") } 
+      return opener .. elem.content .. closer 
+   end 
+end
+

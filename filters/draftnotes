@@ -1,0 +1,17 @@
+-- -*-Lua-*-
+
+-- replace classs marked with [text to surround]{.command.} with \command{text to
+-- surround} when the output is latex
+-- otherwise, remove the trailing . and do nothing.
+
+function Span (elem) 
+   -- match if the class of the element ends in "." 
+   if elem.classes[1] and elem.classes[1] == "draftnote." then
+      if FORMAT == "latex" then
+         local opener = { pandoc.RawInline("latex", "\\draftnote{") } 
+         local closer = { pandoc.RawInline("latex", "}") } 
+         return opener .. elem.content .. closer 
+      end
+   end
+end
+
