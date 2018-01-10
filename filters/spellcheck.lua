@@ -1,9 +1,12 @@
 -- lua filter for spell checking: requires 'aspell'.
 -- (C) 2017 John MacFarlane, released under MIT license
+-- modified by Greg Tucker-Kellogg to use hunspell, including multidict
+-- spelling, with 'dict' metadata
 
 local text = require('text')
 local words = {}
 local deflang
+local spellchecker
 
 local function add_to_dict(lang, t)
   if not words[lang] then
@@ -15,22 +18,37 @@ local function add_to_dict(lang, t)
 end
 
 local function get_deflang(meta)
-  deflang = (meta.lang and meta.lang[1] and meta.lang[1].c) or 'en'
-  -- the following is better but won't work in pandoc 2.0.6.
-  -- it requires pandoc commit ecc46e229fde934f163d1f646383d24bfe2039e1:
-  -- deflang = (meta.lang and pandoc.utils.stringify(meta.lang)) or 'en'
+   deflang = (meta.dict and meta.dict[1] and meta.dict[1].c) or
+      (meta.lang and meta.lang[1] and meta.lang[1].c) or 'en'
+   io.write(deflang,"\n")
+   if (meta.dict and meta.dict[1] and meta.dict[1].c) then
+      spellchecker = 'hunspell'
+   else
+      spellchecker = 'aspell'
+   end
+   -- the following is better but won't work in pandoc 2.0.6.
+   -- it requires pandoc commit ecc46e229fde934f163d1f646383d24bfe2039e1:
+   -- deflang = (meta.lang and pandoc.utils.stringify(meta.lang)) or 'en'
+   -- GTK: stringify always uses space, so I think this wont work for hunspell's
+   -- multidict, which need to be comma separated.
   return {} -- eliminate meta so it doesn't get spellchecked
 end
 
 local function run_spellcheck(lang)
   local keys = {}
   local wordlist = words[lang]
+  local opts = {} 
   for k,_ in pairs(wordlist) do
     keys[#keys + 1] = k
   end
   local inp = table.concat(keys, '\n')
-  local outp = pandoc.pipe('aspell', {'list','-l',lang}, inp)
-  for w in string.gmatch(outp, "(%a*)\n") do
+  if spellchecker == "aspell" then
+     opts = {'list','-l',lang}
+  else
+     opts = { '-l', '-d', lang}
+  end
+  local outp = pandoc.pipe(spellchecker,opts,inp)
+  for w in string.gmatch(outp, "(%a+)\n") do
     io.write(w)
     if lang ~= deflang then
       io.write("\t[" .. lang .. "]")
